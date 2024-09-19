@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Quiz App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2c3e50;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #ecf0f1;
+        }
+        .app-container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #34495e;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .header {
+            background-color: #1abc9c;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+        .login-container, .register-container, .language-selection-container, .quiz-container, .certificate-container {
+            display: none;
+        }
+        .login-container, .register-container {
+            display: block;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .options label {
+            background-color: #16a085;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .options label:hover {
+            background-color: #148f77;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        .btn {
+            margin-top: 20px;
+            background-color: #e67e22;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #d35400;
+        }
+        .timer {
+            font-size: 16px;
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .feedback {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .certificate-container {
+            font-size: 18px;
+            color: #1abc9c;
+            text-align: center;
+        }
+        .certificate-container h2 {
+            margin: 10px 0;
+        }
+        .certificate-btn, .download-btn {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .certificate-btn:hover, .download-btn:hover {
+            background-color: #2980b9;
+        }
+        .input-field {
+            display: block;
+            width: calc(100% - 20px);
+            margin: 10px auto;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header" font-size="16px" >Programming Quiz App</div>
+
+    <!-- Register Page -->
+    <div id="register-container" class="content register-container">
+        <h2>Register</h2>
+        <div class="form-group">
+            <input type="text" id="register-username" class="input-field" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+            <input type="password" id="register-password" class="input-field" placeholder="Password" required>
+        </div>
+        <button class="btn" onclick="register()">Register</button>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login-container" class="content login-container">
+        <h2>Login</h2>
+        <div class="form-group">
+            <input type="text" id="login-username" class="input-field" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+            <input type="password" id="login-password" class="input-field" placeholder="Password" required>
+        </div>
+        <button class="btn" onclick="login()">Login</button>
+    </div>
+
+    <!-- Language Selection Page -->
+    <div id="language-selection-container" class="content language-selection-container">
+        <h2>Select Language for Quiz</h2>
+        <button class="btn" onclick="startQuiz('C')">C</button>
+        <button class="btn" onclick="startQuiz('Java')">Java</button>
+        <button class="btn" onclick="startQuiz('HTML')">HTML</button>
+        <button class="btn" onclick="startQuiz('Python')">Python</button>
+        <button class="btn" onclick="startQuiz('CSS')">CSS</button>
+    </div>
+
+    <!-- Quiz Page -->
+    <div id="quiz-container" class="content quiz-container">
+        <div id="question-container" class="question"></div>
+        <div class="options">
+            <label><input type="radio" name="option" value="0"> <span id="option0"></span></label>
+            <label><input type="radio" name="option" value="1"> <span id="option1"></span></label>
+            <label><input type="radio" name="option" value="2"> <span id="option2"></span></label>
+            <label><input type="radio" name="option" value="3"> <span id="option3"></span></label>
+        </div>
+        <button class="btn" onclick="nextQuestion()">Next</button>
+        <div class="timer" id="timer"></div>
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+  
+    <!-- Certificate Page -->
+<div id="certificate-container" class="content certificate-container">
+    <div class="certificate">
+        <p><img src="file:///C:/Users/ajmsu/Desktop/mini%20project/certificate.jpg" id="certificate-image" alt="Certificate Image" width="400" height="400"></p>
+    </div>
+    <button class="certificate-btn" onclick="downloadCertificate()">Download Certificate</button>
+    <button class="certificate-btn" onclick="restartQuiz()">Restart Quiz</button>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    const questions = {
+        C: [
+            { question: "What is the correct syntax to print 'Hello World' in C?", options: ["print('Hello World')", "echo 'Hello World'", "Console.WriteLine('Hello World')", "printf('Hello World');"], answer: 3 },
+            { question: "Which header file is required to use 'printf' in C?", options: ["<stdio.h>", "<stdlib.h>", "<string.h>", "<math.h>"], answer: 0 },
+            { question: "What is the correct syntax for a comment in C?", options: ["// Comment", "<!-- Comment -->", "/* Comment */", "# Comment"], answer: 2 },
+            { question: "Which of the following is a loop construct in C?", options: ["for", "while", "do-while", "All of the above"], answer: 3 },
+            { question: "What is the size of an int in C?", options: ["2 bytes", "4 bytes", "8 bytes", "16 bytes"], answer: 1 }
+        ],
+        Java: [
+            { question: "What is the correct way to declare a variable in Java?", options: ["int x = 10;", "var x = 10;", "let x = 10;", "x := 10;"], answer: 0 },
+            { question: "Which keyword is used to define a method in Java?", options: ["function", "def", "method", "public"], answer: 3 },
+            { question: "What is the default value of a boolean in Java?", options: ["true", "false", "null", "0"], answer: 1 },
+            { question: "Which class is the parent class of all classes in Java?", options: ["Object", "String", "Exception", "Thread"], answer: 0 },
+            { question: "Which operator is used to compare two values in Java?", options: ["==", "=", "!==", "><"], answer: 0 }
+        ],
+        HTML: [
+            { question: "What does HTML stand for?", options: ["HyperText Markup Language", "HighText Markup Language", "HyperText MultiLanguage", "HighText MultiLanguage"], answer: 0 },
+            { question: "What is the correct HTML element for inserting a line break?", options: ["<break>", "<br>", "<lb>", "<line>"], answer: 1 },
+            { question: "Which HTML tag is used for creating a hyperlink?", options: ["<a>", "<link>", "<href>", "<hyper>"], answer: 0 },
+            { question: "What is the correct HTML for adding a background color?", options: ["<body bg='color'>", "<body style='background-color: color;'>", "<background color='color'>", "<body background='color'>"], answer: 1 },
+            { question: "How can you make a list that lists items vertically?", options: ["<ol>", "<ul>", "<list>", "<li>"], answer: 1 }
+        ],
+        Python: [
+            { question: "What is the correct syntax to output 'Hello World' in Python?", options: ["print('Hello World')", "echo 'Hello World'", "Console.WriteLine('Hello World')", "printf('Hello World');"], answer: 0 },
+            { question: "Which keyword is used to define a function in Python?", options: ["function", "define", "func", "def"], answer: 3 },
+            { question: "How do you insert comments in Python?", options: ["// Comment", "# Comment", "<!-- Comment -->", "/* Comment */"], answer: 1 },
+            { question: "What is the result of 3 / 2 in Python 3?", options: ["1", "1.5", "2", "1.0"], answer: 1 },
+            { question: "Which data type is used to store decimal values in Python?", options: ["int", "float", "char", "string"], answer: 1 }
+        ],
+        CSS: [
+            { question: "How do you add a background color in CSS?", options: ["background-color: #ffffff;", "bgcolor: #ffffff;", "color: #ffffff;", "background: #ffffff;"], answer: 0 },
+            { question: "What property is used to change the font size in CSS?", options: ["font-size", "text-size", "font-style", "text-style"], answer: 0 },
+            { question: "How can you center text in CSS?", options: ["text-align: center;", "align: center;", "center: text;", "text-align: middle;"], answer: 0 },
+            { question: "What is the default value of the 'display' property in CSS?", options: ["block", "inline", "flex", "none"], answer: 1 },
+            { question: "Which CSS property controls the text size?", options: ["font-size", "text-size", "text-style", "font-weight"], answer: 0 }
+        ]
+    };
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedLanguage = '';
+    let timeLeft = 15;
+    let timer;
+    let username = '';
+
+    function showRegister() {
+        document.getElementById('register-container').style.display = 'block';
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('language-selection-container').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('certificate-container').style.display = 'none';
+    }
+
+    function showLogin() {
+        document.getElementById('register-container').style.display = 'none';
+        document.getElementById('login-container').style.display = 'block';
+        document.getElementById('language-selection-container').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('certificate-container').style.display = 'none';
+    }
+
+    function showLanguageSelection() {
+        document.getElementById('register-container').style.display = 'none';
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('language-selection-container').style.display = 'block';
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('certificate-container').style.display = 'none';
+    }
+
+    function startQuiz(language) {
+        selectedLanguage = language;
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('language-selection-container').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        loadQuestion();
+    }
+
+    function register() {
+        username = document.getElementById('register-username').value;
+        const password = document.getElementById('register-password').value;
+
+        if (username && password) {
+            alert("Registration successful! You can now login.");
+            showLogin();
+        } else {
+            alert("Please enter username and password.");
+        }
+    }
+
+    function login() {
+        const loginUsername = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+
+        if (loginUsername === username && password) {
+            showLanguageSelection();
+        } else {
+            alert("Invalid username or password.");
+        }
+    }
+
+    function loadQuestion() {
+        const questionContainer = document.getElementById('question-container');
+        const option0 = document.getElementById('option0');
+        const option1 = document.getElementById('option1');
+        const option2 = document.getElementById('option2');
+        const option3 = document.getElementById('option3');
+
+        const question = questions[selectedLanguage][currentQuestionIndex];
+        questionContainer.innerText = question.question;
+        option0.innerText = question.options[0];
+        option1.innerText = question.options[1];
+        option2.innerText = question.options[2];
+        option3.innerText = question.options[3];
+        timeLeft = 15;
+        startTimer();
+    }
+
+    function startTimer() {
+        timer = setInterval(() => {
+            document.getElementById('timer').innerText = `Time left: ${timeLeft} seconds`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                nextQuestion();
+            }
+            timeLeft--;
+        }, 1000);
+    }
+
+    function nextQuestion() {
+        clearInterval(timer);
+        const selectedOption = document.querySelector('input[name="option"]:checked');
+        if (selectedOption) {
+            const selectedValue = parseInt(selectedOption.value);
+            if (selectedValue === questions[selectedLanguage][currentQuestionIndex].answer) {
+                score++;
+            }
+        }
+
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions[selectedLanguage].length) {
+            loadQuestion();
+        } else {
+            showCertificate();
+        }
+    }
+
+    function showCertificate() {
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('certificate-container').style.display = 'block';
+        document.getElementById('cert-name').innerText = username;
+        document.getElementById('cert-score').innerText = score;
+        document.getElementById('cert-total').innerText = questions[selectedLanguage].length;
+        document.getElementById('cert-date').innerText = new Date().toLocaleDateString();
+    }
+
+    function downloadCertificate() {
+        const imgPath ='file:///C:/Users/ajmsu/Desktop/mini%20project/certificate.jpg'; // Make sure the image path is correct
+        const fileName = 'certificate.jpg';  // File name for download
+
+        // Create an anchor element to trigger the download
+        const downloadLink = document.createElement('a');
+        downloadLink.href = imgPath;
+        downloadLink.download = fileName;
+        
+        // Append the anchor to the body, trigger click and remove it
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
+    function restartQuiz() {
+        // Logic for restarting the quiz
+    }
+    
+
+    function restartQuiz() {
+        showLanguageSelection();
+    }
+
+    showRegister();
+</script>
+
+</body>
+</html>
